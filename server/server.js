@@ -5,13 +5,16 @@ require('dotenv').config();
 //app
 const app = express();
 
-console.log(mongoose);
+
 app.use(express.static('build'));
 
-// routes
-app.get('/', (req,res)=> {
-  res.send('Hello from the server');
-})
+// import routes
+const userRouter = require('./routes/user');
+
+//routes
+app.use('/user', userRouter);
+
+
 
 //db connection
 mongoose.connect(process.env.DATABASE, {
