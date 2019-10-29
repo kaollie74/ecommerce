@@ -1,5 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const morgan = require('morgan')
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+
 require('dotenv').config();
 
 //app
@@ -11,6 +15,12 @@ app.use(express.static('build'));
 // import routes
 const userRouter = require('./routes/user.router');
 
+// middleware
+app.use(morgan('dev'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 //routes Middleware
 app.use('/api', userRouter);
 
@@ -20,7 +30,7 @@ app.use('/api', userRouter);
 mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
   useCreateIndex: true
-}).then( () => {
+}).then(() => {
   console.log('DB connected')
 })
 
