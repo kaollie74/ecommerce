@@ -9,10 +9,10 @@ const app = express();
 app.use(express.static('build'));
 
 // import routes
-const userRouter = require('./routes/user');
+const userRouter = require('./routes/user.router');
 
-//routes
-app.use('/user', userRouter);
+//routes Middleware
+app.use('/api', userRouter);
 
 
 
