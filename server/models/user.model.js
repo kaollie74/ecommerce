@@ -46,6 +46,11 @@ userSchema.virtual('password')
 })
 
 userSchema.methods = {
+
+  authenticate : function(plainText) {
+    return this.encryptPassword(plainText) === this.hashed_password
+  }, // will return true of false
+
   encryptPassword: function(password) {
     if(!password) return '';
 
@@ -56,7 +61,7 @@ userSchema.methods = {
       .digest('hex')
     }
     catch(error) {
-      console.log(`error with passoword`)
+      console.log(`error with password`)
       return '';
     }
   }
