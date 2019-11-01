@@ -5,7 +5,7 @@ const router = express.Router();
 const { userSignupValidator } = require('../validator/index.validator');
 
 // IMPORTING CONTROLLERS
-const { signup, signin, signout, requireSignin } = require('../controllers/user.controller');
+const { signup, signin, signout, requireSignin } = require('../controllers/auth.controller');
 
 
 // USER ROUTES
