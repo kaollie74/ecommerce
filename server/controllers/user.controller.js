@@ -70,10 +70,19 @@ const signin = (req, res) => {
 
 } // END SIGNIN
 
+const signout = (req, res) => {
+
+  res.clearCookie('t');
+  res.json({message: "Signout Success"});
+
+}// END SIGNOUT
+
+
+
 
 
 
 
 // wouldn't initially work when I had just 'sayHi'
 // because i need to export it as an object. 
-module.exports = { signup, signin };
+module.exports = { signup, signin, signout };
