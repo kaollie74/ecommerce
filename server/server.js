@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan')
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const expressValidator = require('express-validator');
 
 require('dotenv').config();
 
@@ -12,21 +13,22 @@ const app = express();
 
 app.use(express.static('build'));
 
-// import routes
+// IMPORTED ROUTES
 const userRouter = require('./routes/user.router');
 
-// middleware
+// MIDDLEWARE
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(expressValidator());
 
-//routes Middleware
+// ROUTES MIDDLEWARE
 app.use('/api', userRouter);
 
 
 
-//db connection
+// DB CONNECTION
 mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
   useCreateIndex: true
@@ -40,7 +42,6 @@ mongoose.connect(process.env.DATABASE, {
 
 
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 })
