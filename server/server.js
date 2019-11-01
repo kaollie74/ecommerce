@@ -30,7 +30,7 @@ app.use('/api', userRouter);
 
 
 
-// DB CONNECTION
+// DATABSE CONNECTION
 mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
   useCreateIndex: true
