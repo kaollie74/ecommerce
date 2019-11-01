@@ -77,6 +77,11 @@ const signout = (req, res) => {
 
 }// END SIGNOUT
 
+const requireSignin = expressJwt({
+  secret: process.env.JWT_SECRET,
+  userProperty: "auth"
+})
+
 
 
 
@@ -85,4 +90,9 @@ const signout = (req, res) => {
 
 // wouldn't initially work when I had just 'sayHi'
 // because i need to export it as an object. 
-module.exports = { signup, signin, signout };
+module.exports = { 
+  signup, 
+  signin, 
+  signout, 
+  requireSignin 
+};
