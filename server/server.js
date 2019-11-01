@@ -14,7 +14,7 @@ const app = express();
 app.use(express.static('build'));
 
 // IMPORTED ROUTES
-const userRouter = require('./routes/user.router');
+const authRouter = require('./routes/auth.router');
 
 // MIDDLEWARE
 app.use(morgan('dev'))
@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(expressValidator());
 
 // ROUTES MIDDLEWARE
-app.use('/api', userRouter);
+app.use('/api', authRouter);
 
 
 
