@@ -1,5 +1,9 @@
 const User = require('../models/user.model');
+const jwt = require('jsonwebtoken'); // used to generate signed token
+const expressJwt = require('express-jwt') // use to check authorization
 const { errorHandler } = require('../helpers/dbErrorHandler');
+require('dotenv').config();
+
 
 const signup = (req, res) => {
 
@@ -9,13 +13,13 @@ const signup = (req, res) => {
 
   user.save()
     .then(response => {
-      
+
       // set salt key to undefined so it is removed 
       // from the 'response' object.
-      response.salt = undefined; 
+      response.salt = undefined;
       // set hashed_password to undefined
       // so it it removed from the 'response' object.
-      response.hashed_password = undefined; 
+      response.hashed_password = undefined;
       res.status(200).json(response);
 
     })
@@ -29,19 +33,41 @@ const signup = (req, res) => {
       })
     })
 
-  //   user.save(( err, user) => {
-  //     if(err) {
-  //       return res.status(400).json({
-  //         err
-  //       })
-  //     }
-  //     res.json({
-  //       user
-  //     });
-  //   })
 
 } // END SIGNUP
 
+const signin = (req, res) => {
+  // find user based on email
+  const { email, password } = req.body // deconstructuring req.body
+  User.findOne({ email }, (error, user) => {
+    if (error || !user) {
+      return res.status(400).json({
+        error: "user with that email does not exist. Please signup."
+      }) // END JSON
+
+    } // END IF
+
+    // If user is found make sure th email and password match
+    // create authenticat method in user model
+
+    // generate a signed token with user id and secret
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
+    // persist the token as 't' in cookie with expiry date
+    res.cookie('t', token, { expire: new Date() + 9999 })
+    // return response with user and tokedn to frontend client
+    const { _id, name, email, role } = user
+    return res.json({
+      
+      token, user: { _id, email, name, role }
+    })
+
+  }) // END USER.FINDONE
+} // END SIGNIN
+
+
+
+
+
 // wouldn't initially work when I had just 'sayHi'
 // because i need to export it as an object. 
-module.exports = { signup };
+module.exports = { signup, signin };
