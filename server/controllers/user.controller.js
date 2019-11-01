@@ -40,6 +40,7 @@ const signin = (req, res) => {
   // find user based on email
   const { email, password } = req.body // deconstructuring req.body
   User.findOne({ email }, (error, user) => {
+
     if (error || !user) {
       return res.status(400).json({
         error: "user with that email does not exist. Please signup."
@@ -49,19 +50,24 @@ const signin = (req, res) => {
 
     // If user is found make sure th email and password match
     // create authenticat method in user model
-
+    if(!user.authenticate(password)) {
+      return res.status(401).json({
+        error: "Email and password don't match"
+      });
+    }
     // generate a signed token with user id and secret
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
     // persist the token as 't' in cookie with expiry date
     res.cookie('t', token, { expire: new Date() + 9999 })
     // return response with user and tokedn to frontend client
-    const { _id, name, email, role } = user
+    const { _id, name, email, role } = user // deconstructuring user body
     return res.json({
       
       token, user: { _id, email, name, role }
-    })
+    });
 
-  }) // END USER.FINDONE
+  }) // END User.findOne
+
 } // END SIGNIN
 
 
