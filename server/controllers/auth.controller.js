@@ -4,7 +4,7 @@ const expressJwt = require('express-jwt') // use to check authorization
 const { errorHandler } = require('../helpers/dbErrorHandler');
 require('dotenv').config();
 
-
+/*********************************** SIGN UP ROUTE ****************************************************/
 const signup = (req, res) => {
 
   //console.log('req.body', req.body);
@@ -36,6 +36,7 @@ const signup = (req, res) => {
 
 } // END SIGNUP
 
+/*********************************** SIGN IN ROUTE ****************************************************/
 const signin = (req, res) => {
   // find user based on email
   const { email, password } = req.body // deconstructuring req.body
@@ -70,6 +71,7 @@ const signin = (req, res) => {
 
 } // END SIGNIN
 
+/*********************************** SIGN OUT ROUTE ****************************************************/
 const signout = (req, res) => {
 
   res.clearCookie('t');
@@ -77,10 +79,40 @@ const signout = (req, res) => {
 
 }// END SIGNOUT
 
+/*********************************** REQUIRE SIGN IN METHOD ****************************************************/
 const requireSignin = expressJwt({
   secret: process.env.JWT_SECRET,
-  userProperty: "auth"
+  userProperty: "auth" // adding auth as user property
 })
+
+/*********************************** IS AUTHORIZATION METHOD ****************************************************/
+const isAuth = (req, res, next) => {
+
+  // if we have a user that returns true, we can authorize using this comparison
+  let user = req.profile && req.auth && req.profile._id == req.auth._id
+
+  if(!user) {
+    return res.status(403).json({
+      error: "Access denied"
+    })
+  } // end if
+
+  next(); 
+} // END isAuth
+
+/*********************************** IS ADMINISTRATOR METHOD ****************************************************/
+isAdmin = (req, res, next) => {
+
+  // 0 means that it is a user and not admin
+  // 1 will mean that the user is the admin
+  if(req.profile.role === 0 ) {
+    return res.status(403).json({
+      error: "Admin access denied"
+    })
+  }// END IF
+
+  next();
+} // END isAdmin
 
 
 
@@ -94,5 +126,7 @@ module.exports = {
   signup, 
   signin, 
   signout, 
-  requireSignin 
+  requireSignin,
+  isAuth, 
+  isAdmin
 };
