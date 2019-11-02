@@ -11,8 +11,11 @@ const userById = (req, res, next, id) => {
       })
     } // END if
     req.profile = user;
+
     next();
+
   }) // END User.findById
+  
 } // END userById
 
 
