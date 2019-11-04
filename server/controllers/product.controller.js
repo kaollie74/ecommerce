@@ -6,31 +6,55 @@ const { errorHandler } = require('../helpers/dbErrorHandler');
 
 const create = (req, res) => {
 
- let form = new formidable.IncomingForm();
- form.keepExtensions = true; 
- form.parse(req, (error, fields, files ) => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.parse(req, (error, fields, files) => {
 
     // if error return json message which will stop the 
     // rest of the function from running.
-    if(error) {
+    if (error) {
       return res.status(400).json({
         error: "Image could not be uploaded"
       }) // END res.status
     } // END if
 
-    let product = new Product(fields)
-    console.log("Product: ", product);
-    // .photo is how it is sent from the client side
-    // if called 'image' it will be files.image instead. 
-    if(files.photo) {
-      product.photo.data = fs.readFileSync(files.photo.path)
-      //console.log('product.photo.data: ', product.photo.data);
-      product.photo.contentType= files.photo.type
-      //console.log("product.photo.contentType: ", product.photo.contentType);
+    // check for all fields 
+    // destructuring fields object. 
+    const { name, description, price, category, quantity, shipping } = fields;
+    // make sure every field are filled. 
+    if (!name || !description || !price || !category || !quantity || !shipping) {
+      return res.status(400).json({
+        error: "All fields are required"
+      })
     }
 
+    let product = new Product(fields)
+
+
+    // 1kb = 1000;
+    // 1mb = 1,000,000
+    // .photo is how it is sent from the client side
+    // if called 'image' it will be files.image instead. 
+    if (files.photo) {
+
+      // check photo size. if over 1mb,
+      //return an error message. 
+      if (files.photo.size > 1000000) {
+        return res.status(400).json({
+          error: "Image should be less than 1mb in size"
+        })
+      } //END IF
+      product.photo.data = fs.readFileSync(files.photo.path)
+      //console.log('product.photo.data: ', product.photo.data);
+      product.photo.contentType = files.photo.type
+      //console.log("product.photo.contentType: ", product.photo.contentType);
+
+    } // END IF(FILES.PHOTO)
+
+    // save data to new product schema
+    // if all conditions are met. 
     product.save((error, result) => {
-      if(error) {
+      if (error) {
         return res.status(400).json({
           error: errorHandler(error)
         })
@@ -38,7 +62,7 @@ const create = (req, res) => {
       res.json(result)
     })
 
- }) // END form.parse
+  }) // END form.parse
 
 
 } // END create
