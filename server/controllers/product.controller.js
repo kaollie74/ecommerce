@@ -4,6 +4,33 @@ const fs = require('fs');
 const Product = require('../models/product.model');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
+const productById = (req, res, next, id) => {
+
+  Product.findById(id).exec((error, product) => {
+
+    if (error || !product) {
+      return res.status(400).json({
+        error: "Product not found"
+      })
+    }  // END if
+    req.product = product;
+    next();
+
+  }) // END Product.findById().
+
+} // END productById.
+
+const read = (req, res) => {
+
+  // set photo property to undefinded which will
+  // prevent being sent back in the request
+  // the retrieving the photo will be handled differently
+  // to keep things efficient. 
+  req.product.photo = undefined; 
+  return res.json(req.product);
+
+} // END read
+
 const create = (req, res) => {
 
   let form = new formidable.IncomingForm();
@@ -67,4 +94,4 @@ const create = (req, res) => {
 
 } // END create
 
-module.exports = { create } 
+module.exports = { create, productById, read } 
