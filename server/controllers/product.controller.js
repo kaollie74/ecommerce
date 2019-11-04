@@ -23,10 +23,10 @@ const create = (req, res) => {
     // .photo is how it is sent from the client side
     // if called 'image' it will be files.image instead. 
     if(files.photo) {
-      product.photo.data = fs.readFileSynce(files.photo.path)
-      console.log('product.photo.data: ', product.photo.data);
+      product.photo.data = fs.readFileSync(files.photo.path)
+      //console.log('product.photo.data: ', product.photo.data);
       product.photo.contentType= files.photo.type
-      console.log("product.photo.contentType: ", product.photo.contentType);
+      //console.log("product.photo.contentType: ", product.photo.contentType);
     }
 
     product.save((error, result) => {
