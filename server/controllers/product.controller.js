@@ -26,16 +26,16 @@ const read = (req, res) => {
   // prevent being sent back in the request
   // the retrieving the photo will be handled differently
   // to keep things efficient. 
-  req.product.photo = undefined; 
+  req.product.photo = undefined;
   return res.json(req.product);
 
 } // END read
 
 const create = (req, res) => {
-
+  console.log('In product controller create:', req.product);
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
-  form.parse(req, (error, fields, files) => {
+  form.parse(req, ( error, fields, files) => {
 
     // if error return json message which will stop the 
     // rest of the function from running.
@@ -54,7 +54,7 @@ const create = (req, res) => {
         error: "All fields are required"
       })
     }
-
+    // create new product.
     let product = new Product(fields)
 
 
@@ -91,7 +91,25 @@ const create = (req, res) => {
 
   }) // END form.parse
 
-
 } // END create
 
-module.exports = { create, productById, read } 
+const removeProduct = (req, res) => {
+
+  // get product info from the request
+  let product = req.product
+  product.remove((error, deletedProduct) => {
+
+    if (error) {
+      return res.status(400).json({
+        error: errorHandler(error)
+      })
+    } // END IF
+
+    res.json({
+      "message": "Product deleted Successfully"
+    })
+  })
+
+} // END removeProduct
+
+module.exports = { create, productById, read, removeProduct }; 
