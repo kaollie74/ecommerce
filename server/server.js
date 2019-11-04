@@ -17,6 +17,7 @@ app.use(express.static('build'));
 const authRouter = require('./routes/auth.router');
 const userRouter = require('./routes/user.router');
 const categoryRouter = require('./routes/category.router');
+const productRouter = require('./routes/product.router');
 
 // MIDDLEWARE
 app.use(morgan('dev'))
@@ -29,6 +30,7 @@ app.use(expressValidator());
 app.use('/api', authRouter);
 app.use('/api', userRouter);
 app.use('/api', categoryRouter);
+app.use('/api', productRouter);
 
 
 
