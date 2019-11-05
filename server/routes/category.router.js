@@ -4,14 +4,18 @@ const router = express.Router();
 
 
 // IMPORTING CONTROLLERS
-const { create, categoryById, categoryRead } = require('../controllers/category.controller');
+const { create, categoryById, categoryRead, categoryUpdate, categoryDelete, list } = require('../controllers/category.controller');
 const { requireSignin, isAuth, isAdmin } = require('../controllers/auth.controller');
 const { userById } = require('../controllers/user.controller');
 
 
 // USER ROUTES
 router.get('/category/:categoryId', categoryRead)
+router.get('/category', list);
 router.post('/category/create/:userId', requireSignin, isAuth, isAdmin, create);
+router.put('/category/:categoryId/:userId', requireSignin, isAuth, isAdmin, categoryUpdate);
+router.delete('/category/:categoryId/:userId', requireSignin, isAuth, isAdmin, categoryDelete);
+
 
 
 
