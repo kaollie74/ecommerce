@@ -107,7 +107,7 @@ isAdmin = (req, res, next) => {
   // 1 will mean that the user is the admin
   if(req.profile.role === 0 ) {
     return res.status(403).json({
-      error: "Admin access denied"
+      error: "Request denied, must be Admin"
     })
   }// END IF
 
