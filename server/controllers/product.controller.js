@@ -260,12 +260,30 @@ const productListRelated = (req, res) => {
 
 } // END productListRelated()
 
+/******************************** productListCategories ***************************************************** */
+const productListCategories = (req, res) => {
+
+  Product.distinct("category", {}, ( error, categories) => {
+
+    if (error) {
+      return res.status(400).json({
+        error: "Products not found"
+
+      })
+
+    } // END if
+    res.json(categories);
+
+  }) // END Product.distinct()
+} // END productListCategories
+
 /** ****************************** MODULE EXPORTS *************************************/
 module.exports = {
   create,
   productById,
   productRead,
   productList,
+  productListCategories,
   productListRelated,
   removeProduct,
   updateProduct,
