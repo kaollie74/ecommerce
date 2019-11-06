@@ -84,7 +84,7 @@ const categoryDelete = (req, res) => {
 
 } // END categoryDelete
 
-const list = (req, res) => {
+const categoryList = (req, res) => {
 
   Category.find().exec((error, data) => {
 
@@ -102,4 +102,4 @@ const list = (req, res) => {
   })
 } // END list
 
-module.exports = { create, categoryById, categoryRead, categoryUpdate, categoryDelete, list } 
+module.exports = { create, categoryById, categoryRead, categoryUpdate, categoryDelete, categoryList } 

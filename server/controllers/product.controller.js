@@ -4,7 +4,7 @@ const fs = require('fs');
 const Product = require('../models/product.model');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
-/*********************** PRODUCT BY ID ******************************************* */
+/*********************** productById ********************************************/
 const productById = (req, res, next, id) => {
 
   Product.findById(id).exec((error, product) => {
@@ -21,7 +21,7 @@ const productById = (req, res, next, id) => {
 
 } // END productById.
 
-/*********************** READ ********************************************************/
+/*********************** read ********************************************************/
 const productRead = (req, res) => {
 
   // set photo property to undefinded which will
@@ -33,7 +33,7 @@ const productRead = (req, res) => {
 
 } // END read
 
-/*********************** CREATE********************************************************/
+/*********************** create ********************************************************/
 const create = (req, res) => {
 
   console.log('In product controller create:', req.product);
@@ -105,7 +105,7 @@ const create = (req, res) => {
 
 } // END create
 
-/*********************** REMOVE PRODUCT ************************************************************/
+/***********************  removeProduct  ************************************************************/
 const removeProduct = (req, res) => {
 
   // get product info from the request
@@ -125,6 +125,7 @@ const removeProduct = (req, res) => {
 
 } // END removeProduct
 
+/** ****************************** updateProduct ********************************************************************/
 const updateProduct = (req, res) => {
 
   console.log('In product controller create:', req.product);
@@ -200,6 +201,8 @@ const updateProduct = (req, res) => {
 
 } // END updateProduct
 
+/** ****************************** productList *****************************************************************/
+
 // Return product base on "Sell" and "Arrival"
 // return product by sell = /products?sortBy=sold&order=desc&limit=4
 // return product by arrival = /products?sortBy=createdAt&order=desc&limit=4
@@ -224,15 +227,47 @@ const productList = (req, res) => {
           error: "Products not found"
         })
       } // END if(error)
-      res.send(products);
+      res.json(products);
     })
 } // END productList()
 
+/** ****************************** PRODUCT LIST RELATED ***********************************************************/
+
+// it will find the product based on the 'req.product.category'
+// other products that has the same category will be returned.
+const productListRelated = (req, res) => {
+
+  let limit = req.query.limit ? parseInt(req.query.limit) : 6;
+
+  // $ne means 'not including, use this for mongoDB.
+  // user will request an item based on its category
+  // this will find the ones that exist in the category minus the 
+  // one they selected.
+  Product.find({ _id: { $ne: req.product }, category: req.product.category })
+    .limit(limit)
+    .populate('category', '_id name')
+    .exec((error, products) => {
+
+      if (error) {
+        return res.status(400).json({
+
+          error: "Product not found"
+
+        })
+      } // END if
+      res.json(products)
+    })
+
+} // END productListRelated()
+
+/** ****************************** MODULE EXPORTS *************************************/
 module.exports = {
   create,
   productById,
   productRead,
+  productList,
+  productListRelated,
   removeProduct,
   updateProduct,
-  productList
+
 }; 
