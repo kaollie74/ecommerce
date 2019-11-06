@@ -22,7 +22,7 @@ const productById = (req, res, next, id) => {
 } // END productById.
 
 /*********************** READ ********************************************************/
-const read = (req, res) => {
+const productRead = (req, res) => {
 
   // set photo property to undefinded which will
   // prevent being sent back in the request.
@@ -198,6 +198,40 @@ const updateProduct = (req, res) => {
 
   }) // END form.parse
 
-}
+} // END updateProduct
 
-module.exports = { create, productById, read, removeProduct, updateProduct }; 
+// Return product base on "Sell" and "Arrival"
+// return product by sell = /products?sortBy=sold&order=desc&limit=4
+// return product by arrival = /products?sortBy=createdAt&order=desc&limit=4
+// if no params are sent, then all products are returned
+const productList = (req, res) => {
+
+  // ternary conditions
+  let order = req.query.order ? req.query.order : 'asc';
+  let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+  let limit = req.query.limit ? req.query.limit : 6;
+
+  Product.find()
+    .select("-photo")
+    .populate("category")
+    .sort([[sortBy, order]])
+    .limit(limit)
+    .exec((error, products) => {
+
+      if (error) {
+        return res.status(400).json({
+          error: "Products not found"
+        })
+      } // END if(error)
+      res.send(products);
+    })
+} // END productList()
+
+module.exports = {
+  create,
+  productById,
+  productRead,
+  removeProduct,
+  updateProduct,
+  productList
+}; 
