@@ -209,7 +209,8 @@ const productList = (req, res) => {
   // ternary conditions
   let order = req.query.order ? req.query.order : 'asc';
   let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
-  let limit = req.query.limit ? req.query.limit : 6;
+  // parseInt() will convert string to number data type
+  let limit = req.query.limit ? parseInt(req.query.limit) : 6;
 
   Product.find()
     .select("-photo")
