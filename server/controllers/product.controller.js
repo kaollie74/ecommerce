@@ -263,7 +263,7 @@ const productListRelated = (req, res) => {
 /******************************** productListCategories ***************************************************** */
 const productListCategories = (req, res) => {
 
-  Product.distinct("category", {}, ( error, categories) => {
+  Product.distinct("category", {}, (error, categories) => {
 
     if (error) {
       return res.status(400).json({
@@ -275,7 +275,61 @@ const productListCategories = (req, res) => {
     res.json(categories);
 
   }) // END Product.distinct()
+
 } // END productListCategories
+
+/**
+ * list products by search
+ * we will implement product search in react frontend
+ * we will show categories in checkbox and price range in radio buttons
+ * as the user clicks on those checkbox and radio buttons
+ * we will make api request and show the products to users based on what he wants
+ */
+
+/******************************************* productListBySearch *****************************************************************/
+const productListBySearch = (req, res) => {
+  let order = req.body.order ? req.body.order : "desc";
+  let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
+  let limit = req.body.limit ? parseInt(req.body.limit) : 100;
+  let skip = parseInt(req.body.skip);
+  let findArgs = {};
+
+  // console.log(order, sortBy, limit, skip, req.body.filters);
+  // console.log("findArgs", findArgs);
+
+  for (let key in req.body.filters) {
+    if (req.body.filters[key].length > 0) {
+      if (key === "price") {
+        // gte -  greater than price [0-10]
+        // lte - less than
+        findArgs[key] = {
+          $gte: req.body.filters[key][0],
+          $lte: req.body.filters[key][1]
+        };
+      } else {
+        findArgs[key] = req.body.filters[key];
+      } // END else
+    } // END if(req.body.filters[key].length > 0)
+  } // END for in loop
+
+  Product.find(findArgs)
+    .select("-photo")
+    .populate("category")
+    .sort([[sortBy, order]])
+    .skip(skip)
+    .limit(limit)
+    .exec((err, data) => {
+      if (err) {
+        return res.status(400).json({
+          error: "Products not found"
+        });
+      }
+      res.json({
+        size: data.length,
+        data
+      });
+    });
+} // END productListBySearch
 
 /** ****************************** MODULE EXPORTS *************************************/
 module.exports = {
@@ -283,6 +337,7 @@ module.exports = {
   productById,
   productRead,
   productList,
+  productListBySearch,
   productListCategories,
   productListRelated,
   removeProduct,
