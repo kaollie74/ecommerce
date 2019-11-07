@@ -9,7 +9,8 @@ const {
   productById, 
   productRead, 
   removeProduct, 
-  updateProduct, 
+  updateProduct,
+  photo, 
   productList, 
   productListBySearch,
   productListCategories,
@@ -26,6 +27,7 @@ router.get('/product/:productId', productRead)
 router.get('/products', productList)
 router.get('/products/related/:productId', productListRelated)
 router.get('/products/categories', productListCategories)
+router.get('/product/photo/:productId', photo)
 router.post('/product/create/:userId', requireSignin, isAuth, isAdmin, create);
 router.post('/products/by/search', productListBySearch);
 router.delete('/product/:productId/:userId', requireSignin, isAuth, isAdmin, removeProduct );
