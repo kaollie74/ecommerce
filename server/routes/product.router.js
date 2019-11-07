@@ -11,6 +11,7 @@ const {
   removeProduct, 
   updateProduct, 
   productList, 
+  productListBySearch,
   productListCategories,
   productListRelated 
 } = require('../controllers/product.controller');
@@ -26,6 +27,7 @@ router.get('/products', productList)
 router.get('/products/related/:productId', productListRelated)
 router.get('/products/categories', productListCategories)
 router.post('/product/create/:userId', requireSignin, isAuth, isAdmin, create);
+router.post('/products/by/search', productListBySearch);
 router.delete('/product/:productId/:userId', requireSignin, isAuth, isAdmin, removeProduct );
 router.put('/product/:productId/:userId', requireSignin, isAuth, isAdmin, updateProduct);
 
