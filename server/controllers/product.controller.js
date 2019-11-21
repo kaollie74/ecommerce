@@ -288,23 +288,25 @@ const productListCategories = (req, res) => {
 
 /******************************************* productListBySearch *****************************************************************/
 const productListBySearch = (req, res) => {
+
+  console.log('productListBySearch REQ.BODY: ', req.body);
+
   let order = req.body.order ? req.body.order : "desc";
   let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
   let limit = req.body.limit ? parseInt(req.body.limit) : 100;
-  let skip = parseInt(req.body.skip);
+  let skip = parseInt(req.body.skip); // returns integer
   let findArgs = {};
 
   // console.log(order, sortBy, limit, skip, req.body.filters);
   // console.log("findArgs", findArgs);
-
   for (let key in req.body.filters) {
     if (req.body.filters[key].length > 0) {
       if (key === "price") {
         // gte -  greater than price [0-10]
         // lte - less than
         findArgs[key] = {
-          $gte: req.body.filters[key][0],
-          $lte: req.body.filters[key][1]
+          $gte: req.body.filters[key][0], //$gte needed to query MonogDB
+          $lte: req.body.filters[key][1]  //$lte needed to query MonogDB
         };
       } else {
         findArgs[key] = req.body.filters[key];
@@ -331,14 +333,21 @@ const productListBySearch = (req, res) => {
     });
 } // END productListBySearch
 
+// this will act as a middleware
+// check to see if there is data with photo key in product object
+// if there is one, set it the 'Content-Type' by using the 'set()' method. 
+// return sending the photo.data
+// then execute the next() method. 
 const photo = (req, res, next) => {
 
+  console.log('req.product.photo.data', req.product.photo.data)
+  
   if(req.product.photo.data) {
 
     res.set('Content-Type', req.product.photo.contentType)
     return res.send(req.product.photo.data)
     
-  }
+  } // END if
 
   next();
 } // END photo
