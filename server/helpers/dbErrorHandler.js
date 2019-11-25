@@ -15,9 +15,8 @@ const uniqueMessage = error => {
     console.log('This is fieldName variable: ', fieldName);
     output =
       fieldName.charAt(0).toUpperCase() +
-      fieldName.slice(1) +
-      " already exists";
-      console.log('This is output variable: ', output);
+      fieldName.slice(1) + " already exists";
+    console.log('This is output variable: ', output);
   } catch (ex) {
     output = "Unique field already exists";
   }
