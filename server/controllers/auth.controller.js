@@ -25,12 +25,13 @@ const signup = (req, res) => {
     })
     .catch(error => {
       console.log(`error:`, error)
-      res.status(500).json({
+      res.send({errors: errorHandler(error)})
+      // res.status(500).json({
 
-        // error from the Db is passed into the errorHandler function
-        // which is imported from 'dbErrorHandler.js'
-        error: errorHandler(error)
-      })
+      //   // error from the Db is passed into the errorHandler function
+      //   // which is imported from 'dbErrorHandler.js'
+      //   error: errorHandler(error)
+      // })
     })
 
 

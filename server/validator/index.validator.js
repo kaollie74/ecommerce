@@ -36,7 +36,9 @@ const userSignupValidator = (req, res, next) => {
          firstError = errors.map( error => error.msg)[0];
          console.log('firstError', firstError);
          // return status and value in a json object    
-         return res.status(400).json({error: firstError});
+         //return res.status(400).json( error={error: firstError});
+         return res.send({errors: firstError});
+         
     }
 
     
