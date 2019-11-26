@@ -7,9 +7,15 @@ const uniqueMessage = error => {
   console.log('IN UNIQUE MESSAGE FUNCTION: ', error.errmsg);
   let output = '';
   let newError = error.errmsg;
+  console.log(newError.lastIndexOf("_1") + 2)
+  console.log(newError.lastIndexOf("_1"))
+  console.log(newError.substring(newError.lastIndexOf("_1") - 5, newError.lastIndexOf("_1")))
   try {
+    // let fieldName = newError.substring(
+    //   newError.lastIndexOf(".$") + 2,
+    //   newError.lastIndexOf("_1")
     let fieldName = newError.substring(
-      newError.lastIndexOf(".$") + 2,
+      newError.lastIndexOf("_1") - 5,
       newError.lastIndexOf("_1")
     );
     console.log('This is fieldName variable: ', fieldName);

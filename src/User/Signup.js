@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from "react-router-dom";
 import Layout from '../core/Layout';
-import Axios from 'axios';
+import { signUp } from "../auth/index";
+
 
 const Signup = () => {
 
@@ -24,31 +25,31 @@ const Signup = () => {
   }
 
   /************************************************************************* SIGN UP *********/
-  const signUp = (name, email, password) => {
+  // const signUp = (name, email, password) => {
 
-    //console.log("in signUP: ", name, email, password);
+  //   //console.log("in signUP: ", name, email, password);
 
-    // newObject will be set to server 
-    let newObject = {
-      name: name,
-      email: email,
-      password: password
-    }
+  //   // newObject will be set to server 
+  //   let newObject = {
+  //     name: name,
+  //     email: email,
+  //     password: password
+  //   }
 
-    // send Axios.post to server to sign new user up
-    return Axios.post('/api/signup', newObject)
+  //   // send Axios.post to server to sign new user up
+  //   return Axios.post('/api/signup', newObject)
 
-      .then(response => {
-        console.log(response)
-        return response
-      })// end then
-      .catch(error => {
-        console.log(error);
-        return error
+  //     .then(response => {
+  //       console.log(response)
+  //       return response
+  //     })// end then
+  //     .catch(error => {
+  //       console.log(error);
+  //       return error
 
-      })// end catch
+  //     })// end catch
 
-  } // END signUp
+  // } // END signUp
 
 
 
@@ -150,7 +151,7 @@ const Signup = () => {
       {showSuccess()}
       {showError()}
       {signupForm()}
-      {JSON.stringify(values)}
+      {JSON.stringify(values)} 
     </Layout>
   )
 }
