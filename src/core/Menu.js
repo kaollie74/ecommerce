@@ -1,9 +1,10 @@
 import React from 'react';
 
 import { Link, withRouter } from 'react-router-dom';
+import { signout } from "../auth/index"
 
 // history will be the actual browser path
-// path will be the 
+// path will be the what we assign it to. 
 const isActive = (history, path) => {
   if (history.location.pathname === path) {
     return { color: "orange" }
@@ -36,6 +37,18 @@ const Menu = ({ history }) => {
           <Link className="nav-link" style={isActive(history, "/signup")} to="/signup">
             Signup
           </Link>
+        </li>
+
+        <li className="nav-item">
+          <span
+            className="nav-link"
+            style={{ cursor: "pointer", color: "white" }}
+            onClick={() => signout( () => {
+              history.push("/")
+            })}>
+              
+            Signout
+          </span>
         </li>
 
       </ul>

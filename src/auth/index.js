@@ -51,6 +51,10 @@ export const signin = (email, password) => {
 
 } // END signUp
 
+// method will store data from DB locally on browser
+// check if window is not "undefined"
+// if true  store data as "jwt" by using setItem() method.
+// the run callback method which will set local state in "Signin.js" component.
 export const authenticate = (data, callBack) => {
 
   if( typeof window !== "undefined"){
@@ -62,3 +66,19 @@ export const authenticate = (data, callBack) => {
     callBack();
   }
 }
+
+export const signout = (callBack) => {
+
+  if( typeof window !== "undefined") {
+    localStorage.removeItem("jwt");
+    callBack()
+  } 
+  return Axios.get("/api/signout")
+  .then( response => {
+    console.log("signout", response.data);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+}
+
