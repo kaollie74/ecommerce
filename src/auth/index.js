@@ -63,7 +63,7 @@ export const authenticate = (data, callBack) => {
     // second argument is what you want to store.
     // In this case, it will be the data we get back from the server.
     localStorage.setItem("jwt", JSON.stringify(data) )
-    callBack();
+    callBack(); // callback method
   }
 }
 
@@ -80,5 +80,19 @@ export const signout = (callBack) => {
   .catch(error => {
     console.log(error);
   })
+}
+
+export const isAuth = () => {
+
+  if(typeof window == "undefined"){
+    return false;
+  }
+
+  if(localStorage.getItem('jwt')) {
+    return JSON.parse(localStorage.getItem('jwt'))
+  } else {
+    return false;
+  }
+
 }
 
