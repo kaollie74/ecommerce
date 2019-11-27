@@ -50,3 +50,15 @@ export const signin = (email, password) => {
     })// end catch
 
 } // END signUp
+
+export const authenticate = (data, callBack) => {
+
+  if( typeof window !== "undefined"){
+    // use method setItem to store local storage on browser
+    // first argument is the 'key' or what we will call it on the browser, 
+    // second argument is what you want to store.
+    // In this case, it will be the data we get back from the server.
+    localStorage.setItem("jwt", JSON.stringify(data) )
+    callBack();
+  }
+}
