@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 
 import { Link, withRouter } from 'react-router-dom';
-import { signout } from "../auth/index"
+import { signout, isAuth } from "../auth/index"
 
 // history will be the actual browser path
 // path will be the what we assign it to. 
@@ -27,7 +27,9 @@ const Menu = ({ history }) => {
           </Link>
         </li>
 
-        <li className="nav-item">
+       {!isAuth() && (
+         <Fragment>
+            <li className="nav-item">
           <Link className="nav-link" style={isActive(history, "/signin")} to="/signin">
             Signin
           </Link>
@@ -38,8 +40,12 @@ const Menu = ({ history }) => {
             Signup
           </Link>
         </li>
+         </Fragment>
+       )}
 
-        <li className="nav-item">
+     {isAuth() && (
+       <div>
+            <li className="nav-item">
           <span
             className="nav-link"
             style={{ cursor: "pointer", color: "white" }}
@@ -50,6 +56,8 @@ const Menu = ({ history }) => {
             Signout
           </span>
         </li>
+       </div>
+     )}
 
       </ul>
 
