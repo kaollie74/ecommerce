@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Redirect } from "react-router-dom";
 import Layout from '../core/Layout';
-import { signin } from "../auth/index";
-import { set } from 'mongoose';
+import { signin, authenticate } from "../auth/index";
+//import { set } from 'mongoose';
 
 
 // functional component
@@ -44,10 +44,16 @@ const Signin = () => {
             redirectToReferrer: false
           })
         } else {
-          setValues({
-            ...values,
-            loading: false,
-            redirectToReferrer: true,
+
+          // pass response.data as first argument in authenticate method.
+          // pass as a callback function the setValues.
+          // this will happen in auth/index.js file
+          authenticate(response.data, ()=> {
+            setValues({
+              ...values,
+              loading: false,
+              redirectToReferrer: true,
+            })
           })
         }
       })
