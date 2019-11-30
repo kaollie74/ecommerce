@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Redirect } from "react-router-dom";
 import Layout from '../core/Layout';
-import { signin, authenticate } from "../auth/index";
+import { signin, authenticate, isAuth } from "../auth/index";
 //import { set } from 'mongoose';
 
 
@@ -17,7 +17,9 @@ const Signin = () => {
     redirectToReferrer: false
   })
 
+  // destructuring 
   const { email, password, loading, error, redirectToReferrer } = values;
+  const {user} = isAuth();
 
   // handles the informaton that is typed in the input box
   // based on the parameters that are passed with the onChange method in signupForm() function.
@@ -118,7 +120,11 @@ const Signin = () => {
   // send user to Home page. 
   const redirectUser = () => {
     if(redirectToReferrer) {
-      return <Redirect to="/" />
+      if(user && user.role === 1) {
+        return <Redirect to="/admin/dashboard" />
+      } else {
+        return <Redirect to ='/user/dashboard'/>
+      }
     }
   }
 
