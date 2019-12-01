@@ -58,7 +58,7 @@ const signin = (req, res) => {
       // return res.status(401).json({
       //   error: "Email and password don't match"
       // });
-      res.send(errors = {errors: "Email and password don't match"})
+      return res.send(errors = {errors: "Email and password don't match"})
     }
     // generate a signed token with user id and secret
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
@@ -96,9 +96,10 @@ const isAuth = (req, res, next) => {
   let user = req.profile && req.auth && req.profile._id == req.auth._id
 
   if(!user) {
-    return res.status(403).json({
-      error: "Access denied"
-    })
+    // return res.status(403).json({
+    //   error: "Access denied"
+    // })
+    return res.send( errors = {errors: "Access denied"})
   } // end if
 
   next(); 
@@ -110,9 +111,10 @@ isAdmin = (req, res, next) => {
   // 0 means that it is a user and not admin
   // 1 will mean that the user is the admin
   if(req.profile.role === 0 ) {
-    return res.status(403).json({
-      error: "Request denied, must be Admin"
-    })
+    // return res.status(403).json({
+    //   error: "Request denied, must be Admin"
+    // })
+    return res.send(error = {errors: "Request denied, must be Admin"})
   }// END IF
 
   next();

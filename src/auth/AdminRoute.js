@@ -2,17 +2,17 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { isAuth } from "./index";
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
+const AdminRoute = ({ component: Component, ...rest }) => (
 
    <Route 
     {...rest} 
     render={props => 
-      isAuth() && isAuth().user.role === 0 ? (
+      isAuth() && isAuth().user.role === 1 ? (
 
     <Component {...props} />
 
   ) : (
-      alert("You must be signed in, in order to access dashboard"),
+      alert("You must be Admin in order to access dashboard"),
       <Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
     )} 
     />
@@ -20,4 +20,4 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 
 
 
-export default PrivateRoute; 
+export default AdminRoute; 

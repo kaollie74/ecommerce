@@ -53,8 +53,8 @@ export const signin = (email, password) => {
 
 // method will store data from DB locally on browser
 // check if window is not "undefined"
-// if true  store data as "jwt" by using setItem() method.
-// the run callback method which will set local state in "Signin.js" component.
+// if true, store data as "jwt" by using setItem() method.
+// then run callback method which will set local state in "Signin.js" component.
 export const authenticate = (data, callBack) => {
 
   if( typeof window !== "undefined"){
