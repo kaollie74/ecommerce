@@ -58,6 +58,8 @@ const Signup = () => {
     event.preventDefault(); // prevent browser from refreshing the page. 
 
     // signUp function will passed the state values as it arguments.
+    // it will return a response of error which will continue the rest of
+    // the async functionality by setting state to the errors or the new values
     signUp(name, email, password)
       .then(response => {
         console.log(response.data)

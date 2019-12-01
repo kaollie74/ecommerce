@@ -19,7 +19,7 @@ const Signin = () => {
 
   // destructuring 
   const { email, password, loading, error, redirectToReferrer } = values;
-  const {user} = isAuth();
+  const { user } = isAuth();
 
   // handles the informaton that is typed in the input box
   // based on the parameters that are passed with the onChange method in signupForm() function.
@@ -28,13 +28,13 @@ const Signin = () => {
     setValues({ ...values, error: false, [propsName]: event.target.value });
   }
 
-  
+
   const clickSubmit = (event) => {
 
     event.preventDefault(); // prevent browser from refreshing the page. 
-    setValues({ ...values, error: false, loading: true});
+    setValues({ ...values, error: false, loading: true });
     // signUp function will passed the state values as it arguments.
-    signin( email, password)
+    signin(email, password)
       .then(response => {
         console.log(response.data)
         //console.log(response.data.errors)
@@ -50,7 +50,7 @@ const Signin = () => {
           // pass response.data as first argument in authenticate method.
           // pass as a callback function the setValues.
           // this will happen in auth/index.js file
-          authenticate(response.data, ()=> {
+          authenticate(response.data, () => {
             setValues({
               ...values,
               loading: false,
@@ -119,12 +119,18 @@ const Signin = () => {
   // if redirectToReferres is true,
   // send user to Home page. 
   const redirectUser = () => {
-    if(redirectToReferrer) {
-      if(user && user.role === 1) {
+
+    if (redirectToReferrer) {
+      if (user && user.role === 1) {
         return <Redirect to="/admin/dashboard" />
       } else {
-        return <Redirect to ='/user/dashboard'/>
+        return <Redirect to='/user/dashboard' />
       }
+    }
+    // if user is already logged in, this will send the user to the 
+    // Home page instead of Signin page
+    if(isAuth()) {
+     return <Redirect to = '/'/>
     }
   }
 
@@ -134,7 +140,7 @@ const Signin = () => {
       {showError()}
       {signinForm()}
       {redirectUser()}
-      {JSON.stringify(values)} 
+      {JSON.stringify(values)}
     </Layout>
   )
 }

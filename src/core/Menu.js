@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, { Fragment } from 'react';
 
 import { Link, withRouter } from 'react-router-dom';
 import { signout, isAuth } from "../auth/index"
@@ -27,43 +27,71 @@ const Menu = ({ history }) => {
           </Link>
         </li>
 
-        <li className="nav-item">
-          <Link className="nav-link" style={isActive(history, "/user/dashboard")} to="/user/dashboard">
-            DashBoard
-          </Link>
-        </li>
+        {isAuth() && isAuth().user.role !== 0 ?
 
-       {!isAuth() && (
-         <Fragment>
+          <li className="nav-item">
+            <Link className="nav-link" style={isActive(history, "/admin/dashboard")} to="/admin/dashboard">
+              Admin DashBoard
+            </Link>
+          </li>
+
+          :
+
+
+          <li className="nav-item">
+            <Link className="nav-link" style={isActive(history, "/user/dashboard")} to="/user/dashboard">
+              DashBoard
+            </Link>
+          </li>
+
+
+        }
+
+        {/* {isAuth() && isAuth().user.role === 1 && (
+           <li className="nav-item">
+           <Link className="nav-link" style={isActive(history, "/admin/dashboard")} to="/admin/dashboard">
+             Admin DashBoard
+            </Link>
+         </li>
+        )} */}
+
+
+
+        {/** if isAuth() return false, then "Signin" && "Signup"
+         * will conditionally render to the Menu bar */}
+        {!isAuth() && (
+          <Fragment>
             <li className="nav-item">
-          <Link className="nav-link" style={isActive(history, "/signin")} to="/signin">
-            Signin
+              <Link className="nav-link" style={isActive(history, "/signin")} to="/signin">
+                Signin
           </Link>
-        </li>
+            </li>
 
-        <li className="nav-item">
-          <Link className="nav-link" style={isActive(history, "/signup")} to="/signup">
-            Signup
-          </Link>
-        </li>
-         </Fragment>
-       )}
-
-     {isAuth() && (
-       <div>
             <li className="nav-item">
-          <span
-            className="nav-link"
-            style={{ cursor: "pointer", color: "white" }}
-            onClick={() => signout( () => {
-              history.push("/")
-            })}>
-              
-            Signout
+              <Link className="nav-link" style={isActive(history, "/signup")} to="/signup">
+                Signup
+          </Link>
+            </li>
+          </Fragment>
+        )}
+
+        {/* if isAuth() return true, then "Signout"
+         * will conditionally render to the Menu bar */}
+        {isAuth() && (
+          <div>
+            <li className="nav-item">
+              <span
+                className="nav-link"
+                style={{ cursor: "pointer", color: "white" }}
+                onClick={() => signout(() => {
+                  history.push("/")
+                })}>
+
+                Signout
           </span>
-        </li>
-       </div>
-     )}
+            </li>
+          </div>
+        )}
 
       </ul>
 
