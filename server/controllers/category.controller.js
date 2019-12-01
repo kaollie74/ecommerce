@@ -19,14 +19,17 @@ const categoryById = (req, res, next, id) => {
 
 const create = (req, res) => {
 
+  console.log("Hello this is req.body" , req.body)
+
   const category = new Category(req.body);
 
   category.save((error, data) => {
 
     if (error) {
-      return res.status(400).json({
-        error: errorHandler(error)
-      })
+      // return res.status(400).json({
+      //   error: errorHandler(error)
+      // })
+      return res.send( {errors: errorHandler(error)})
     } // END if
     res.json({ data })
   }) // END category.save()
