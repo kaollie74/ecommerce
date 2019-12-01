@@ -3,6 +3,9 @@ import Layout from '../core/Layout';
 import { isAuth } from "../auth/index";
 import { Link } from 'react-router-dom';
 
+//import methods from apiAdmin.js
+import { createCategory } from './apiAdmin';
+
 const AddCategory = () => {
 
   //STATE
@@ -21,6 +24,27 @@ const AddCategory = () => {
     setError("");
     setSuccess(false);
 
+    let newObject = {
+      token: token,
+      _id: _id,
+      name: categoryName
+    }
+
+    createCategory(newObject)
+      .then(response => {
+        console.log(response);
+        if (response.errors) {
+          setError(response.errors)
+          setName('')
+        } else {
+          setError("");
+          setSuccess(true)
+
+        }
+      })
+
+
+
 
     // make request API to create category
 
@@ -28,6 +52,7 @@ const AddCategory = () => {
 
   const handleChange = (event, propsName) => {
     setError('')
+    setSuccess(false);
     setName(event.target.value)
   }
 
@@ -44,12 +69,32 @@ const AddCategory = () => {
             onChange={(event) => handleChange(event, 'categoryName')}
             value={categoryName}
             autoFocus
+            required
           />
-         
+
         </div>
         <button className="btn btn-outline-primary"> Create Category </button>
       </form>
     )
+  }
+
+  const showSuccess = () => {
+    if (success) {
+      return <h3 className="text-success" >{categoryName} is created</h3>
+    }
+  }
+
+  const showError = () => {
+    if (error) {
+      return <h3 className="text-danger" >{error}</h3>
+    }
+  }
+
+  const goBack = () => {
+    return <div className="mt-4">
+      <Link to="/admin/dashboard" className="text-warning">Back to Dashboard</Link>
+
+    </div>
   }
 
   return (
@@ -60,11 +105,15 @@ const AddCategory = () => {
       className="container-fluid"
 
     >
+      {showError()}
+      {showSuccess()}
       <div className="row">
         <div className="col-md-8 offset-md-2">
           {newCategoryForm()}
           {JSON.stringify(categoryName)}
+          {goBack()}
         </div>
+        
       </div>
     </Layout>
   )
