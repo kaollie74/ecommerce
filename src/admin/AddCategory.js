@@ -39,6 +39,7 @@ const AddCategory = () => {
         } else {
           setError("");
           setSuccess(true)
+          setName('')
 
         }
       })
@@ -80,7 +81,7 @@ const AddCategory = () => {
 
   const showSuccess = () => {
     if (success) {
-      return <h3 className="text-success" >{categoryName} is created</h3>
+      return <h3 className="text-success" >Category has been successfully created</h3>
     }
   }
 
