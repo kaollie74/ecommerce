@@ -1,6 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import Layout from './Layout';
-import {getProducts} from "./apiCore";
+import { getProducts } from "./apiCore";
+
+import Card from './Card';
 
 const Home = () => {
 
@@ -9,10 +11,10 @@ const Home = () => {
   const [productByArrival, setProductsByArrival] = useState([])
   const [error, setError] = useState(false)
 
-  useEffect(()=> {
+  useEffect(() => {
     loadProductsByArrival()
     loadProductsBySell();
-  } , [])
+  }, [])
 
   // function will invoke the getProducts() method that resides in /apiCore.
   // it will pass in the argument sold so ti will be sorted by that agrument.
@@ -22,32 +24,49 @@ const Home = () => {
   const loadProductsBySell = () => {
 
     getProducts("sold")
-    .then(response => {
-      if(response.error) {
-        setError(response.error)
-      } else {
-        setProductsBySell(response)
-      }
-    })
+      .then(response => {
+        if (response.error) {
+          setError(response.error)
+        } else {
+          setProductsBySell(response)
+        }
+      })
   }
   const loadProductsByArrival = () => {
 
     getProducts("createdAt")
-    .then(response => {
-      if(response.error) {
-        setError(response.error)
-      } else {
-        setProductsByArrival(response)
-      }
-    })
+      .then(response => {
+        if (response.error) {
+          setError(response.error)
+        } else {
+          setProductsByArrival(response)
+        }
+      })
   }
-  
+
   return (
-    <Layout title="Home Page" description="Node React E-commerce App">
-      { JSON.stringify(productByArrival)}
-      <br/>
-      <br/>
-      {JSON.stringify(productBySell)}
+    <Layout title="Home Page" description="Node React E-commerce App" className="container-fluid">
+
+      <h2 className="mb-4" style={{textAlign: 'center'}}>Best Sellers</h2>
+
+      <div className="row">
+        {productBySell.map((item, i) => (
+          <Card productSold={item} key={i} />
+
+        ))}
+      </div>
+
+      <h2 className="mb-4" style={{textAlign: 'center'}}>New Arrivals</h2>
+      <div className="row">
+
+        {productByArrival.map((item, i) => (
+          <Card productSold={item} key={i} />
+
+        ))}
+      </div>
+
+
+
     </Layout>
   )
 }
