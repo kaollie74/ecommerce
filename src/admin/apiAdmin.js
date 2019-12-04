@@ -20,23 +20,57 @@ export const createCategory = (categoryData) => {
 } // END CREATE CATEGORY
 
 /**************************************************************************************** CREATE PRODUCT ****************** */
-export const createProduct = (productData) => {
+export const createProduct = (_id, token, product) => {
 
-   const { _id, token, name }  = productData;
+  // console.log(productData);
+  //  const { _id, token, newFormData }  = productData;
 
    let config = {
-    headers: {'Authorization': "bearer " + token}
+    headers: {'Authorization': "bearer " + token }
 };
-  console.log(productData._id);
+  console.log(product);
 
-
-  return Axios.post(`/api/product/create/${_id}`, {name}, config)
+  return Axios.post(`/api/product/create/${_id}`, product, config)
   .then( response => {
-    console.log(response.data);
+    console.log(response);
     return response.data;
   })
   .catch(error => {
-    return console.log(error);
+     console.log(error);
+
   })
+
+  // return fetch(`http://localhost:5000/product/create/${_id}`, {
+  //   method: "POST",
+  //   headers: {
+  //     Accept: "application/json",
+  //     Authorization: `Bearer ${token}`
+  //   },
+  //   body: product
+  // })
+  // // .then(response => {
+  // //   return response.json()
+  // // })
+  // .then(res => res.text())         
+  // .then(text => console.log(text))
+  // .catch( error => {
+  //   console.log("This is error: ", error);
+  // })
+
 } // END CREATE CATEGORY
+
+export const getCategories = () => {
+
+  return Axios.get(`/api/category`)
+
+  .then( response => {
+    console.log(response.data)
+    return response.data
+  })
+
+  .catch(error => {
+    console.log(error);
+  })
+
+}// END GET CATEGORIES 
 

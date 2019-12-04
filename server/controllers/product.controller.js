@@ -23,7 +23,6 @@ const productById = (req, res, next, id) => {
 
 /*********************** read ********************************************************/
 const productRead = (req, res) => {
-
   // set photo property to undefinded which will
   // prevent being sent back in the request.
   // Retrieving the photo will be handled differently
@@ -36,72 +35,58 @@ const productRead = (req, res) => {
 /*********************** create ********************************************************/
 const create = (req, res) => {
 
-  console.log('In product controller create:', req.product);
+  console.log("In Product Create: ", req.body);
 
   let form = new formidable.IncomingForm();
-  form.keepExtensions = true;
-  form.parse(req, (error, fields, files) => {
+    form.keepExtensions = true;
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            return res.status(400).json({
+                error: 'Image could not be uploaded'
 
-    // if error return json message which will stop the 
-    // rest of the function from running.
-    if (error) {
+            });
+            //return res.send({errors: "Image could not be uploaded"})
+        }
+        // check for all fields
+        const { name, description, price, category, quantity, shipping } = fields;
+        console.log("FIELDS: ", fields);
+        if (!name || !description || !price || !category || !quantity || !shipping) {
+            // return res.status(400).json({
+            //     error: 'All fields are required'
+            // });
+            return res.send({error: "All fields are required"})
+        }
 
-      return res.status(400).json({
-        error: "Image could not be uploaded"
+        let product = new Product(fields);
 
-      }) // END res.status
+        // 1kb = 1000
+        // 1mb = 1000000
 
-    } // END if
+        if (files.photo) {
+            // console.log("FILES PHOTO: ", files.photo);
+            if (files.photo.size > 1000000) {
+                return res.status(400).json({
+                    error: 'Image should be less than 1mb in size'
+                });
+                // return res.send({errors: "Image should be less than 1mb in size"})
+            }
+            product.photo.data = fs.readFileSync(files.photo.path);
+            product.photo.contentType = files.photo.type;
+        }
 
-    // check for all fields 
-    // destructuring fields object. 
-    const { name, description, price, category, quantity, shipping } = fields;
+        product.save((err, result) => {
+            if (err) {
+                console.log('PRODUCT CREATE ERROR ', err);
+                return res.status(400).json({
+                    error: errorHandler(err)
+                });
+                //return res.send({errors: errorHandler(err)})
+            }
+            res.json(result);
+            //res.send(result)
+        });
+    });
 
-    // make sure every field is filled. 
-    if (!name || !description || !price || !category || !quantity || !shipping) {
-      return res.status(400).json({
-        error: "All fields are required"
-      })
-    } // END IF
-
-    // create new product.
-    let product = new Product(fields)
-
-
-    // 1kb = 1000;
-    // 1mb = 1,000,000
-    // .photo is how it is sent from the client side
-    // if called 'image' it will be files.image instead. 
-    if (files.photo) {
-
-      // check photo size. if over 1 MB,
-      //return an error message. 
-      if (files.photo.size > 1000000) {
-        return res.status(400).json({
-          error: "Image should be less than 1mb in size"
-        })
-      } // END if (files.photo.size > 1000000)
-
-      product.photo.data = fs.readFileSync(files.photo.path)
-      //console.log('product.photo.data: ', product.photo.data);
-      product.photo.contentType = files.photo.type
-      //console.log("product.photo.contentType: ", product.photo.contentType);
-
-    } // END if(files.photo)
-
-    // save data to new product schema,
-    // if all conditions are met. 
-    product.save((error, result) => {
-      if (error) {
-        return res.status(400).json({
-          error: errorHandler(error)
-        })
-      } // END if(error)
-      res.json(result)
-
-    }) // END product.save()
-
-  }) // END form.parse
 
 } // END create
 

@@ -26,7 +26,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(expressValidator());
-//app.use(cors());
+app.use(cors());
 
 // ROUTES MIDDLEWARE
 app.use('/api', authRouter);

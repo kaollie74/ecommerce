@@ -11,13 +11,13 @@ const uniqueMessage = error => {
   console.log(newError.lastIndexOf("_1"))
   console.log(newError.substring(newError.lastIndexOf("_1") - 5, newError.lastIndexOf("_1")))
   try {
-    // let fieldName = newError.substring(
-    //   newError.lastIndexOf(".$") + 2,
-    //   newError.lastIndexOf("_1")
     let fieldName = newError.substring(
-      newError.lastIndexOf("_1") - 5,
-      newError.lastIndexOf("_1")
-    );
+      newError.lastIndexOf(".$") + 2,
+      newError.lastIndexOf("_1"));
+    // let fieldName = newError.substring(
+    //   newError.lastIndexOf("_1") - 5,
+    //   newError.lastIndexOf("_1")
+    // );
     console.log('This is fieldName variable: ', fieldName);
     output =
       fieldName.charAt(0).toUpperCase() +

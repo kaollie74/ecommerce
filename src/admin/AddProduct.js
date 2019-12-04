@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from "../core/Layout";
 import { isAuth } from '../auth/index';
 import { Link } from "react-router-dom";
-import { createProduct } from "./apiAdmin";
+import { createProduct, getCategories } from "./apiAdmin";
 
 const AddProduct = () => {
 
@@ -28,7 +28,8 @@ const AddProduct = () => {
   const { user: { _id, name, email }, token } = isAuth();
 
   // destructuring local state 
-  const { productName,
+  const {
+    productName,
     description,
     price,
     categories,
@@ -37,27 +38,126 @@ const AddProduct = () => {
     quantity,
     loading,
     error,
+    photo,
     createdProduct,
     redirectToProfile,
-    formData } = values;
+    formData
+  } = values;
 
-    useEffect( () => {
-      setValues({...values, formData: new FormData()})
-    }, [])
+  // load categories and set form data 
 
+  const init = () => {
+    getCategories()
+      .then(response => {
+        console.log(response);
+        if (response.errors) {
+          setValues({
+            ...values,
+            error: response.error
+          })
+        } else {
+          setValues({
+            ...values,
+            categories: response,
+            formData: new FormData()
+          })
+        }
+      })
+  }
+
+  //use Effect will run on page load. 
+  useEffect(() => {
+    init()
+  }, [])
+
+  /************************************************************************* HANDLE CHANGE */
+  // handle the input data using setValues method
+  // to set event.target.value to the propsName passed into
+  // the argument.
   const handleChange = (event, propsName) => {
 
-    //let value = propsName === 'photo' ? event.target.files[0] : event.target.value;
+    let value = propsName === 'photo' ? event.target.files[0] : event.target.value;
 
-    setValues({ ...values, [propsName]: event.target.value })
-    formData.set(propsName, event.target.value);
+    //console.log("This is current value of state: " + propsName + ": " + value)
+    formData.set(propsName, value);
+    setValues({ ...values, [propsName]: value })
+
+    //console.log(formData)
   }
 
+  // const test = () => {
+
+  //   const entries = formData.entries();
+  //   let entryObj = entries.next();
+
+  //   while (!entryObj.done) {
+  //     const [key, value] = entryObj.value;
+  //     console.log(key, value);
+  //     entryObj = entries.next();
+  //   }
+
+
+  // }
+
+
+
+  /************************************************************************* CLICK SUBMIT */
   const clickSubmit = (event) => {
+    // prevent browser from refreshing
     event.preventDefault();
-    console.log("in clickSubmit");
-  }
 
+    // setting form data before it is sent to the backend.
+    const formData2 = new FormData()
+    formData2.set("photo", photo)
+    formData2.set("name", productName)
+    formData2.set("description", description)
+    formData2.set("price", price)
+    formData2.set("category", singleCategory)
+    formData2.set("shipping", shipping)
+    formData2.set("quantity", quantity)
+
+    console.log("in clickSubmit");
+
+    setValues({
+      ...values,
+      error: '',
+      loading: true
+    })
+
+
+
+    // creatProduct is method that resides in apiAdmin.js file
+    // this method will send a request to the server with the '_id', 'token', and 'formData2'
+    // passed in as the argument.
+    createProduct(_id, token, formData2)
+      .then(response => {
+        console.log(response.error);
+        if (response.error) {
+          setValues({ ...values, error: response.error })
+        } else {
+          setValues({
+            ...values,
+            productName: '',
+            description: '',
+            photo: '',
+            price: '',
+            quantity: '',
+            loading: false,
+            error: '',
+            createdProduct: response.name,
+          })
+        }
+
+      })
+      .catch(err => {
+        console.log(err);
+      })
+
+
+  } // end CLICK SUBMIT
+
+
+  /************************************************************************* NEW PRODUCT FORM  */
   const newProductForm = () => {
 
     return (
@@ -91,7 +191,7 @@ const AddProduct = () => {
         {/****************************************************** DESCRIPTION */}
         <div className="form-group">
           <label className="text-muted">Description</label>
-          <textArea
+          <textarea
             type="text"
             className="form-control"
             value={description}
@@ -117,9 +217,11 @@ const AddProduct = () => {
             value={singleCategory}
             onChange={(event) => handleChange(event, "singleCategory")}
           >
-            <option value="none" selected disabled> Select A Category </option>
-            <option value="5dc0d7b1a860942c0d9f52ae">Node.js</option>
-            <option value="">PHP</option>
+            <option>Please Select</option>
+            {categories && categories.map((item, i) => (
+              <option key={i} value={item._id}>{item.name}</option>
+            ))}
+
           </select>
         </div>
         {/****************************************************** SHIPPING */}
@@ -131,7 +233,7 @@ const AddProduct = () => {
             value={shipping}
             onChange={(event) => handleChange(event, "shipping")}
           >
-            <option value="none" selected disabled> Select A Shipping Preference </option>
+            <option>Please Select</option>
             <option value="0">No</option>
             <option value="1">Yes</option>
           </select>
@@ -152,6 +254,28 @@ const AddProduct = () => {
 
       </form>
     )
+  } // END NEW PRODUCT FORM
+
+  const showError = () => {
+    return (
+      <div className="alert alert-danger" style={{ display: error ? "" : "none" }}>
+        {error}
+      </div>
+    )
+  }
+  const showSuccess = () => {
+    return (
+      <div className="alert alert-info" style={{ display: createdProduct ? "" : "none" }}>
+        <h2>{`${createdProduct} is created`}</h2>
+      </div>
+    )
+  }
+  const showLoading = () => {
+    return (
+      <div>
+        {loading ? "Loading..." : ""}
+      </div>
+    )
   }
 
   return (
@@ -165,9 +289,17 @@ const AddProduct = () => {
 
       <div className="row">
         <div className="col-md-8 offset-md-2">
+          {showError()}
+          {showSuccess()}
+          {showLoading()}
           {newProductForm()}
 
-          {JSON.stringify(values)}
+
+
+
+          {JSON.stringify(singleCategory)}
+
+
 
         </div>
 
