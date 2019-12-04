@@ -31,6 +31,7 @@ const create = (req, res) => {
       // })
       return res.send( {errors: errorHandler(error)})
     } // END if
+    
     res.json({ data })
   }) // END category.save()
 } // END create
