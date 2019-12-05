@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import Layout from './Layout';
 import Card from './Card';
-import {getCategories} from "./apiCore";
+import { getCategories } from "./apiCore";
+import Checkbox from "./Checkbox"
 
 
 
 const Shop = () => {
 
-  const[categories, setCategories] = useState([])
-  const[error, setError] = useState(false)
+  const [categories, setCategories] = useState([])
+  const [error, setError] = useState(false)
 
-  useEffect( () => {
+  useEffect(() => {
     init();
   }, [])
   const init = () => {
@@ -31,13 +32,17 @@ const Shop = () => {
         title="Shop Page"
         description="Search and find books of your choice"
         className="container-fluid"
-      >
-        <div className="row">
-          <div className="col-4">left sidebar</div>
-          <div className="col-8">right sidebar </div>
+      ></Layout>
+      <div className="row">
+        <div className="col-4">
+          <h4>Filter By Categories</h4>
+         <ul>
+         <Checkbox categories={categories}/>
+         </ul>
         </div>
-      </Layout>
-      {JSON.stringify(categories)};
+        <div className="col-8">right sidebar </div>
+      </div>
+
     </>
 
   )
