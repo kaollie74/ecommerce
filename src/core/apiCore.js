@@ -14,3 +14,18 @@ export const getProducts = (sortBy) => {
 
   })
 }
+
+export const getCategories = () => {
+
+  return Axios.get(`/api/category`)
+
+  .then( response => {
+    console.log(response.data)
+    return response.data
+  })
+
+  .catch(error => {
+    console.log(error);
+  })
+
+}// END GET CATEGORIES 
