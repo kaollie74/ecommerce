@@ -1,5 +1,6 @@
 import React from 'react'
 import Menu from "./Menu";
+import '../style.css';
 
 // this is a layout Component that will take props and then organize the layout based on this
 // layout template. This can be used througout the front-end.

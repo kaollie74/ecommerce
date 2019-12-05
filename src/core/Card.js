@@ -17,7 +17,7 @@ const Card = ({ productSold, productArrival }) => {
             <p>{productSold.description}</p>
             <p>${productSold.price}</p>
             <Link to="/"></Link>
-            <button className="btn btn-outline-primary mt-2 mb-2"> View Product</button>
+            <button className="btn btn-outline-primary mt-2 mb-2 mr-2"> View Product</button>
             <button className="btn btn-outline-danger mt-2 mb-2"> Add to Cart</button>
 
           </div>
