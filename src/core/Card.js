@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getProducts } from './apiCore';
+import ShowImage from './ShowImage';
 
 const Card = ({ productSold, productArrival }) => {
 
@@ -11,16 +12,14 @@ const Card = ({ productSold, productArrival }) => {
           <div className="card-header" style={{ backgroundColor: "black", color: "white" }}>
             {productSold.name}
           </div>
-          <div style={{ margin: 'auto' }}>
-            <div style={{ display: "inline-flex" }}>
-              <p>{productSold.description}</p>
-              <p>${productSold.price}</p>
-            </div>
-            <div>
-              <Link to="/"></Link>
-              <button className="btn btn-outline-primary mt-2 mb-2"> View Product</button>
-              <button className="btn btn-outline-danger mt-2 mb-2"> Add to Cart</button>
-            </div>
+          <div className="card-body" style={{ margin: 'auto' }}>
+            <ShowImage item={productSold} url="product" />
+            <p>{productSold.description}</p>
+            <p>${productSold.price}</p>
+            <Link to="/"></Link>
+            <button className="btn btn-outline-primary mt-2 mb-2"> View Product</button>
+            <button className="btn btn-outline-danger mt-2 mb-2"> Add to Cart</button>
+
           </div>
         </div>
       </div>
