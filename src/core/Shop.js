@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Layout from './Layout';
 import Card from './Card';
-import { getCategories } from "./apiCore";
+import { getCategories, getFilteredProducts } from "./apiCore";
 import Checkbox from "./Checkbox"
 import RadioBox from "./RadioBox.js";
 import { prices } from "./FixedPrices";
+import { get } from 'http';
+
 
 
 
@@ -14,10 +16,16 @@ const Shop = () => {
     filters: { category: [], price: [] }
   })
   const [categories, setCategories] = useState([])
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false) 
+  const [limit, setLimit] = useState(6) 
+  const [skip, setSkip] = useState(0) 
 
+  const[filteredResults, setFilteredResults] = useState([])
+
+  // Runs on page load and when state changes
   useEffect(() => {
     init();
+    loadFitlerResults(skip, limit, myFilters.filters);
   }, [])
 
   const init = () => {
@@ -32,6 +40,22 @@ const Shop = () => {
       })
   } // END INIT
 
+  const loadFitlerResults = (newFilters) => {
+    console.log(newFilters);
+    getFilteredProducts(skip, limit, newFilters)
+    .then(response => {
+      if(response.error){
+        setError(response.error);
+      }else {
+        setFilteredResults(response);
+      }
+    })
+    .catch( error => {
+      console.log(error);
+    })
+    //console.log(getFilteredProducts);
+   }
+
   // filters argument will be the array of categories and/or price range
   // filterBy argument will be either by category or price
   // conditional will run if filterBy === price which will pass the filters
@@ -45,6 +69,7 @@ const Shop = () => {
       let priceValues = handlePrice(filters)
       newFilters.filters[filterBy] = priceValues;
     }
+    loadFitlerResults(myFilters.filters);
     setMyFilters(newFilters);
 
   }
@@ -67,10 +92,12 @@ const Shop = () => {
       }
     }
 
-    console.log("handlePrice: ", array);
+    //console.log("handlePrice: ", array);
     return array;
 
   }
+
+   
 
   return (
     <>
@@ -97,11 +124,10 @@ const Shop = () => {
           </div>
         </div>
         <div className="col-8">
-          
-
+        {JSON.stringify(filteredResults)}
         </div>
       </div>
-      {JSON.stringify(myFilters)}
+      
     </>
 
   )
