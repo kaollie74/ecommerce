@@ -11,8 +11,8 @@ const Layout = ({ title = "Title", description = "Description", className, child
       <div className="jumbotron">
 
         <div>
-          <h2>{title}</h2>
-          <p className="lead">{description}</p>
+          <h1>{title}</h1>
+          <h3 className="lead">{description}</h3>
         </div>
         <div className={className}>{children}</div>
       </div>

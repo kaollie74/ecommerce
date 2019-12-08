@@ -5,7 +5,7 @@ import React from 'react';
 const ShowImage = ({ item, url }) => {
 
   return <div className="product-img">
-    <img src={`/api/${url}/photo/${item._id}`} alt={item.name} style={{maxHeigth: "100%", maxWidth: "100%"}}  className="mb-3"/>
+    <img src={`/api/${url}/photo/${item._id}`} alt={item.name} style={{maxHeight: "360px", maxWidth: "290px"}}  className="mb-3"/>
   </div>
 
 
