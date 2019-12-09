@@ -70,3 +70,18 @@ export const list = (params) => {
     console.log(error);
   })
 }
+
+export const read = (productId) => {
+
+  console.log("In READ: ", productId);
+
+ return Axios.get(`/api/product/${productId}`)
+  .then(response => {
+    console.log("RESPONSE FROM SERVER: ", response.data)
+    return response.data
+  })
+  .catch(error => {
+    console.log(error)
+  })
+
+}
