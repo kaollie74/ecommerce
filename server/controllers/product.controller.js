@@ -339,11 +339,13 @@ const photo = (req, res, next) => {
 
 const productListSearch = (req,res) => {
   // create query object to hold search value and category value
+  console.log(req.query);
   const query = {}
   // assign search value to query.name
   if(req.query.search){
 
     query.name = {$regex: req.query.search, $options: 'i'}
+    console.log("query.name: ", query.name);
     
       // assign category value to query.category
       if(req.query.category && req.query.cateogry !== "All"){
@@ -354,9 +356,10 @@ const productListSearch = (req,res) => {
       // search and category
       Product.find(query, (error, products) =>{
         if(error) {
-          return res.status(400).json({
-            error: errorHandler(error)
-          })
+          // return res.status(400).json({
+          //   error: errorHandler(error)
+          // })
+          return res.send({error: errorHandler(error)})
         } // END IF 
         res.json(products)
       }).select('-photo')
