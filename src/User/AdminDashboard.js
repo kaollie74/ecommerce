@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import Layout from "../core/Layout";
 import { isAuth } from "../auth/index";
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ const AdminDashboard = () => {
           </li>
           <li className="list-group-item">
             <Link className="nav-link" to='/create/product'>
-             Create Product
+              Create Product
             </Link>
           </li>
 
@@ -44,24 +44,25 @@ const AdminDashboard = () => {
     )
   }
 
- 
+
 
   return (
-
-    <Layout title="Admin Dashboard" description={`Hello ${name}`} className="container-fluid">
-     <div className="row"> 
-       <div className="col-3">
+    <Fragment>
+      <Layout title="Admin Dashboard" description={`Hello ${name}`} className="container-fluid"></Layout>
+      <div className="row">
+        <div className="col-3">
           {adminLinks()}
-       </div>
-       <div className="col-9">
+        </div>
+        <div className="col-9">
           {adminInfo()}
-      
-       </div>
-     </div>
+
+        </div>
+      </div>
+    </Fragment>
 
 
 
-    </Layout>
+
   )
 }
 export default AdminDashboard;
