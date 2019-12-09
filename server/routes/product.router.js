@@ -14,7 +14,8 @@ const {
   productList, 
   productListBySearch,
   productListCategories,
-  productListRelated 
+  productListRelated,
+  productListSearch 
 } = require('../controllers/product.controller');
 
 const { requireSignin, isAuth, isAdmin } = require('../controllers/auth.controller');
@@ -25,6 +26,7 @@ const { userById } = require('../controllers/user.controller');
 // USER ROUTES
 router.get('/product/:productId', productRead)
 router.get('/products', productList)
+router.get('/products/search', productListSearch);
 router.get('/products/related/:productId', productListRelated)
 router.get('/products/categories', productListCategories)
 router.get('/product/photo/:productId', photo) 
