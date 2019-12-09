@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getCategories } from "./apiCore";
+import { getCategories, list } from "./apiCore";
 import Card from "./Card";
-import { isTemplateElement } from '@babel/types';
+
 
 const Search = () => {
 
@@ -48,15 +48,57 @@ const Search = () => {
   } // END LOAD CATEGORIES
 
   /******************************************************************** HANDLE CHANGE */
-  const handleChange = (event, search) => {
+  const handleChange = (event, propsName) => {
     console.log("IN HANDLE CHANGE: ", event.target.value)
+
+    setData({
+      ...data,
+      [propsName]: event.target.value,
+      searched: false,
+    })
   }
+
+  const searchProducts = (results = []) => {
+    
+    return (
+      
+        <div className="row">
+          {results.map((item, i) => (
+            <Card key={i} product={item} />
+          ))}
+        </div>
+    )
+  }
+
+  const searchData = () => {
+    console.log(search, singleCategory);
+    let newObject = {
+      search,
+      singleCategory
+    }
+    if (search) {
+      list(newObject)
+        .then(response => {
+          if (response.error) {
+            console.log(response.error);
+          } else {
+            setData({
+              ...data,
+              results: response,
+              searched: true
+            })
+          }
+        })
+    }
+
+  } // END SEARCH DATA
 
   /******************************************************************** SEARCH SUBMIT */
   const searchSubmit = (event) => {
+
     event.preventDefault();
-    console.log("In search Submit")
-  }
+    searchData();
+  } // END SEARCH SUBMIT
 
   /******************************************************************** SEARCH FORM  */
   const searchForm = () => {
@@ -65,7 +107,7 @@ const Search = () => {
         <span className="input-group-text">
           <div className="input-group input-group-lg">
             <div className="input-group-prepend">
-              <select className="btn mr-2" onChange={(event) => handleChange(event, "category")}>
+              <select className="btn mr-2" onChange={(event) => handleChange(event, "singleCategory")}>
                 <option value="All">Pick Category</option>
                 {categories.map((item, i) => (
                   <option key={i} value={item._id} >{item.name}</option>
@@ -89,7 +131,12 @@ const Search = () => {
 
   return (
     <div className="row">
-      <div className="container">{searchForm()}</div>
+      <div className="container mb-3">
+        {searchForm()}
+      </div>
+      <div className="conatiner-fluid mb-3">
+        {searchProducts(results)}
+      </div>
     </div>
   )
 } // END SEARCH

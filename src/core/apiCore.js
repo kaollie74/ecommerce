@@ -1,5 +1,7 @@
 import React from 'react';
 import Axios from 'axios';
+import queryString from "query-string";
+
 
 /*************************************************************************** GET PRODUCTS *************** */
 
@@ -50,3 +52,21 @@ export const getFilteredProducts = (skip, limit, filters = {}) => {
     console.log(error)
   })
 } // END GET FILTERED PRODUCTS
+
+/*************************************************************************** LIST *************** */
+ // utilize queryString.stringify() to best params in to api request.
+ // queryString is a package that is installed 'query-string' to make this happend
+export const list = (params) => {
+
+  const query = queryString.stringify(params)
+  console.log(query);
+
+  return Axios.get(`/api/products/search?${query}`)
+  .then( response => {
+    console.log(response.data);
+    return response.data;
+  })
+  .catch( error => {
+    console.log(error);
+  })
+}

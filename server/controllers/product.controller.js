@@ -337,6 +337,32 @@ const photo = (req, res, next) => {
   next();
 } // END photo
 
+const productListSearch = (req,res) => {
+  // create query object to hold search value and category value
+  const query = {}
+  // assign search value to query.name
+  if(req.query.search){
+
+    query.name = {$regex: req.query.search, $options: 'i'}
+    
+      // assign category value to query.category
+      if(req.query.category && req.query.cateogry !== "All"){
+        query.category = req.query.category;
+      } // END IF 
+
+      //find the product based on query object with 2 properties
+      // search and category
+      Product.find(query, (error, products) =>{
+        if(error) {
+          return res.status(400).json({
+            error: errorHandler(error)
+          })
+        } // END IF 
+        res.json(products)
+      }).select('-photo')
+  } // END IF 
+} // END PRODUCT LIST SEARCH
+
 /** ****************************** MODULE EXPORTS *************************************/
 module.exports = {
   create,
@@ -349,5 +375,6 @@ module.exports = {
   productListRelated,
   removeProduct,
   updateProduct,
+  productListSearch
 
 }; 
