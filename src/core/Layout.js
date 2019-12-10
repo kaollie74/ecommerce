@@ -8,11 +8,11 @@ const Layout = ({ title = "Title", description = "Description", className, child
   return (
     <>
       <Menu/>
-      <div className="jumbotron">
+      <div className="jumbotron" style={{textAlign: "center"}}>
 
         <div>
           <h1>{title}</h1>
-          <h3 className="lead">{description}</h3>
+          <h3 className="lead" >{description}</h3>
         </div>
         <div className={className}>{children}</div>
       </div>

@@ -70,3 +70,30 @@ export const list = (params) => {
     console.log(error);
   })
 }
+
+export const read = (productId) => {
+
+  console.log("In READ: ", productId);
+
+ return Axios.get(`/api/product/${productId}`)
+  .then(response => {
+    console.log("RESPONSE FROM SERVER: ", response.data)
+    return response.data
+  })
+  .catch(error => {
+    console.log(error)
+  })
+
+}
+
+export const listRelated = (productId) => {
+  
+  return Axios.get(`/api/products/related/${productId}`)
+  .then( response => {
+    console.log(response.data);
+    return response.data;
+  })
+  .catch(error => {
+    console.log(error);
+  })
+}

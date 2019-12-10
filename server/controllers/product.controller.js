@@ -7,12 +7,18 @@ const { errorHandler } = require('../helpers/dbErrorHandler');
 /*********************** productById ********************************************/
 const productById = (req, res, next, id) => {
 
-  Product.findById(id).exec((error, product) => {
+  console.log("ID>>>>>>>>>>>", id)
+
+  Product.findById(id)
+  .populate('category')
+  .exec((error, product) => {
 
     if (error || !product) {
-      return res.status(400).json({
-        error: "Product not found"
-      })
+      // return res.status(400).json({
+      //   error: "Product not found"
+      // })
+      return res.send({error: "Product not found"})
+
     }  // END if
     req.product = product;
     next();
@@ -27,8 +33,10 @@ const productRead = (req, res) => {
   // prevent being sent back in the request.
   // Retrieving the photo will be handled differently
   // to keep things efficient. 
+  console.log("REQ.PRODUCT>>>>>>>>>>>>>>>> ", req.product)
   req.product.photo = undefined;
-  return res.json(req.product);
+  //return res.json(req.product);
+  return res.send(req.product);
 
 } // END read
 
