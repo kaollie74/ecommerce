@@ -31,10 +31,10 @@ const Shop = () => {
     loadFitlerResults(skip, limit, myFilters.filters);
   }, [])
 
- /************************************************************************** INIT */
- // run getCategories method which runs in ./apiCore file
- // once response comes back from server, if it is error, set response.error to error state
- // else set the response, which is categories, to categories state
+  /************************************************************************** INIT */
+  // run getCategories method which runs in ./apiCore file
+  // once response comes back from server, if it is error, set response.error to error state
+  // else set the response, which is categories, to categories state
   const init = () => {
     getCategories()
       .then(response => {
@@ -47,14 +47,14 @@ const Shop = () => {
       })
   } // END INIT
 
- /************************************************************************** LOAD FILTER RESULTS */
-// Run getFilteredProducts method that resides in ./apiCore
-// the method has 3 arguments: skip and limit are set in state.
-// newFilters is passed in from the "handleFilters" method
-// if response comes back error set error to response
-// else setFilteredResults to the response
-// setSize to response.size
-// setSkip to 0
+  /************************************************************************** LOAD FILTER RESULTS */
+  // Run getFilteredProducts method that resides in ./apiCore
+  // the method has 3 arguments: skip and limit are set in state.
+  // newFilters is passed in from the "handleFilters" method
+  // if response comes back error set error to response
+  // else setFilteredResults to the response
+  // setSize to response.size
+  // setSkip to 0
   const loadFitlerResults = (newFilters) => {
     console.log(newFilters);
     getFilteredProducts(skip, limit, newFilters)
@@ -103,7 +103,7 @@ const Shop = () => {
     if (size > 0 && size >= limit) {
       return <button onClick={loadMore} className="btn btn-warning mb-5">Load More</button>
     }
- 
+
   } // END LOAD MORE BUTTON
 
   // filters argument will be the array of categories and/or price range
@@ -182,12 +182,13 @@ const Shop = () => {
             {filteredResults.map((item, i) => {
               return (
 
-                <Card key={i} product={item} />
+                <div key={i} className="col-4 mb-3">
+                  < Card product={item} />
+                </div>
 
               )
             })}
             <hr />
-            {JSON.stringify(size)}
             {loadMoreButton()}
 
 

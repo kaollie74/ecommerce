@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Redirect } from "react-router-dom";
 import Layout from '../core/Layout';
 import { signin, authenticate, isAuth } from "../auth/index";
-//import { set } from 'mongoose';
+
 
 
 // functional component

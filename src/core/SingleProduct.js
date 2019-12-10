@@ -7,42 +7,45 @@ import Card from './Card';
 
 const SingleProduct = (props) => {
 
-  const [singleProduct, setSingleProduct] = useState ({
+  const [singleProduct, setSingleProduct] = useState({
 
   })
   const [error, setError] = useState(false)
 
-  useEffect( () => {
+  useEffect(() => {
 
     // grab the id from the url by using props.match.params.productId
     const productId = props.match.params.productId
-     loadSingleProduct(productId);
-  } , [])
+    loadSingleProduct(productId);
+  }, [])
 
-  const loadSingleProduct = (productId) =>{
+  const loadSingleProduct = (productId) => {
 
     // read() method will make request to back end to get specific product based on its
     // id.
     read(productId)
-    .then( response => {
-      if(response.error) {
-        console.log(response.error)
-        setError(response.error)
-      }
-      setSingleProduct(response)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+      .then(response => {
+        if (response.error) {
+          console.log(response.error)
+          setError(response.error)
+        }
+        setSingleProduct(response)
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   return (
 
     <Fragment>
-      <Layout title="Single Product" description></Layout>
-      <h2 className="mb-4">Single Product</h2>
+      <Layout title={singleProduct && singleProduct.name} description={singleProduct && singleProduct.description && singleProduct.description.substring(0, 50)}></Layout>
       <div className="row">
-        {JSON.stringify(singleProduct)}
+        {
+          singleProduct &&
+          singleProduct.description &&
+          < Card product={singleProduct}  showViewProductButton={false}/>
+        }
       </div>
     </Fragment>
 
