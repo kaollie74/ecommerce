@@ -58,3 +58,38 @@ export const getCart = () => {
   }
   return [];
 }
+
+// update specific product by passing its id and the count we want to update with
+// as the argument.
+// grab local storage and set new cart variable to the products that exist in the browser.
+// that map through car and compare the product._id to the productId that is passed in as the argument
+// if matched, that updated that specific product count with the new count argument. 
+// then setItem to localStorage with new updated cart. 
+export const updateItem = (productId, count) => {
+  console.log("IN UPDATE ITEM: ", productId, count);
+  const product2Id = JSON.stringify(productId);
+  console.log("productId: ", product2Id);
+  let cart = [];
+
+  if(typeof window !== "undefined") {
+    if(localStorage.getItem("cart")){
+      
+      cart = JSON.parse(localStorage.getItem("cart"))
+    }
+    cart.map((item, i) => {
+      //console.log("item: ", item);
+      if(item._id === productId) {
+        //console.log("item id: ", item._id)
+        console.log(cart[i]);
+        cart[i].count = count;
+      }
+    })
+    //console.log("cart: ", cart)
+    localStorage.setItem("cart", JSON.stringify(cart)); 
+  }
+
+ 
+  
+
+
+}
