@@ -1,15 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { getProducts } from './apiCore';
 import ShowImage from './ShowImage';
 import moment from "moment";
-import {addItem} from "./cartHelpers";
+import { addItem, updateItem } from "./cartHelpers";
+import { identifier, updateExpression } from '@babel/types';
 
-const Card = ({ product, showViewProductButton = true, showAddToCartButtonCondition= true }) => {
+const Card = ({ product, showViewProductButton = true, showAddToCartButtonCondition = true, cartUpdate = false }) => {
 
   // STATE
   const [redirect, setRedirect] = useState(false)
   const [run, setRun] = useState(false);
+  const [ count, setCount] = useState(product.count);
 
   // useEffect(() => {
   //   setItems(getCart());
@@ -33,20 +35,51 @@ const Card = ({ product, showViewProductButton = true, showAddToCartButtonCondit
     // its globally accessible. 
     addItem(product, () => {
       setRedirect(true);
-    } )
+    })
+  }
+
+  const handleChange = (event, productId) => {
+    // use ternary to prevent any negative values. 
+
+    setCount(event.target.value < 1 ? 1 : event.target.value);
+    // up
+    if(event.target.value >= 1) {
+      updateItem(productId, event.target.value) // method in api to update
+    }
+  }
+
+  const showCartUpdateOptions = (cartUpdate) => {
+
+    if (cartUpdate) {
+      return (
+        <div> 
+          <div className="input-group mb-3">
+            <div className="input-group-prepend">
+              <span className="input-group-text">Adjust Quantity</span>
+            </div>
+            <input 
+            type="number" 
+            className="form-control" 
+            value ={count} 
+            onChange={(event) => handleChange(event, product._id)}/>
+          </div>
+        </div>
+      )
+    }
+   
   }
 
   const shouldRedirect = redirect => {
-    console.log("in redirect")
-    if(redirect) {
-      return <Redirect to ="/cart"></Redirect>
+    
+    if (redirect) {
+      return <Redirect to="/cart"></Redirect>
     }
   }
 
   const showAddToCartButton = () => {
 
-    if(showAddToCartButtonCondition) {
-     return <button onClick={addToCart} className="btn btn-outline-danger mt-2 mb-2"> Add to Cart</button>
+    if (showAddToCartButtonCondition) {
+      return <button onClick={addToCart} className="btn btn-outline-danger mt-2 mb-2"> Add to Cart</button>
     }
   }
 
@@ -55,6 +88,7 @@ const Card = ({ product, showViewProductButton = true, showAddToCartButtonCondit
     return quantity > 0 ? <span className="badge badge-primary badge-pill">In Stock</span> : <span>Out of Stock</span>
 
   }
+
   return (
     <>
 
@@ -78,9 +112,10 @@ const Card = ({ product, showViewProductButton = true, showAddToCartButtonCondit
 
           <div style={{ textAlign: "center" }}>
             {showStock(product.quantity)}
-            <br/>
+            <br />
             {showViewButton(showViewProductButton)}
             {showAddToCartButton(showAddToCartButtonCondition)}
+            {showCartUpdateOptions(cartUpdate)}
           </div>
 
         </div>
