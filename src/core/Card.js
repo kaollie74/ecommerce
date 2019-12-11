@@ -1,10 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import { getProducts } from './apiCore';
 import ShowImage from './ShowImage';
 import moment from "moment";
+import {addItem} from "./cartHelpers";
 
 const Card = ({ product, showViewProductButton = true }) => {
+
+  // STATE
+  const [redirect, setRedirect] = useState(false)
+  const [run, setRun] = useState(false);
+
+  // useEffect(() => {
+  //   setItems(getCart());
+  // }, [run]);
 
   // showViewProductButton as an agrument is set to default true.
   // when its passed in from SingleProduct Component, it switches to false
@@ -19,9 +28,25 @@ const Card = ({ product, showViewProductButton = true }) => {
     )
   }
 
+  const addToCart = () => {
+    // product is passed through props from parents components,
+    // its globally accessible. 
+    addItem(product, () => {
+      setRedirect(true);
+    } )
+  }
+
+  const shouldRedirect = redirect => {
+    console.log("in redirect")
+    if(redirect) {
+      return <Redirect to ="/cart"></Redirect>
+    }
+  }
+
   const showAddToCartButton = () => {
+    
     return (
-      <button className="btn btn-outline-danger mt-2 mb-2"> Add to Cart</button>
+      <button onClick={addToCart} className="btn btn-outline-danger mt-2 mb-2"> Add to Cart</button>
     )
   }
 
@@ -38,6 +63,7 @@ const Card = ({ product, showViewProductButton = true }) => {
           {product.name}
         </div>
         <div className="card-body" style={{ margin: 'auto' }}>
+          {shouldRedirect(redirect)}
           <ShowImage item={product} url="product" />
           <p className="lead mt-2">
             {product.description.substring(0, 50)}
