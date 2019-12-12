@@ -3,19 +3,27 @@ import { Link, Redirect } from 'react-router-dom';
 import { getProducts } from './apiCore';
 import ShowImage from './ShowImage';
 import moment from "moment";
-import { addItem, updateItem } from "./cartHelpers";
-import { identifier, updateExpression } from '@babel/types';
+import { addItem, updateItem, removeItem } from "./cartHelpers";
 
-const Card = ({ product, showViewProductButton = true, showAddToCartButtonCondition = true, cartUpdate = false }) => {
+
+const Card = ({
+  product,
+  run = undefined,
+  setRun = f => f,
+  showViewProductButton = true,
+  showAddToCartButtonCondition = true,
+  cartUpdate = false,
+  showRemoveProductButton = false }) => {
 
   // STATE
   const [redirect, setRedirect] = useState(false)
-  const [run, setRun] = useState(false);
-  const [ count, setCount] = useState(product.count);
+  const [count, setCount] = useState(product.count);
 
   // useEffect(() => {
   //   setItems(getCart());
   // }, [run]);
+
+  /******************************************************************************** SHOW VIEW BUTTON **************************** */
 
   // showViewProductButton as an agrument is set to default true.
   // when its passed in from SingleProduct Component, it switches to false
@@ -30,51 +38,69 @@ const Card = ({ product, showViewProductButton = true, showAddToCartButtonCondit
     )
   }
 
+  /******************************************************************************** ADD TO CART **************************** */
+
   const addToCart = () => {
-    // product is passed through props from parents components,
+    // "product" is passed through props from parents components,
     // its globally accessible. 
+    // 
     addItem(product, () => {
       setRedirect(true);
     })
   }
 
+  /******************************************************************************** HANDLE CHANGE **************************** */
   const handleChange = (event, productId) => {
-    // use ternary to prevent any negative values. 
 
+    // use ternary to prevent any negative values. 
     setCount(event.target.value < 1 ? 1 : event.target.value);
-    // up
-    if(event.target.value >= 1) {
+    // if event.target.valu is greater than 0 that use update() method
+    // that resides in ./cartHelpers.js file
+    if (event.target.value >= 1) {
       updateItem(productId, event.target.value) // method in api to update
     }
   }
+
+  /******************************************************************************** SHOW CART UPDATE OPTIONS **************************** */
 
   const showCartUpdateOptions = (cartUpdate) => {
 
     if (cartUpdate) {
       return (
-        <div> 
+        <div>
           <div className="input-group mb-3">
             <div className="input-group-prepend">
               <span className="input-group-text">Adjust Quantity</span>
             </div>
-            <input 
-            type="number" 
-            className="form-control" 
-            value ={count} 
-            onChange={(event) => handleChange(event, product._id)}/>
+            <input
+              type="number"
+              className="form-control"
+              value={count}
+              onChange={(event) => handleChange(event, product._id)} />
           </div>
         </div>
       )
     }
-   
+
   }
 
+  /******************************************************************************** SHOULD REDIRECT **************************** */
+
   const shouldRedirect = redirect => {
-    
+
     if (redirect) {
       return <Redirect to="/cart"></Redirect>
     }
   }
+  /******************************************************************************** SHOW REMOVE BUTTON **************************** */
+  const showRemoveButton = (showRemoveProductButton) => {
+
+    if (showRemoveProductButton) {
+      return <button onClick={() => removeItem(product._id)} className="btn btn-outline-danger mt-2 mb-2"> Remove Product</button>
+    }
+  }
+
+  /******************************************************************************** SHOW ADD TO CART BUTTON**************************** */
 
   const showAddToCartButton = () => {
 
@@ -82,6 +108,8 @@ const Card = ({ product, showViewProductButton = true, showAddToCartButtonCondit
       return <button onClick={addToCart} className="btn btn-outline-danger mt-2 mb-2"> Add to Cart</button>
     }
   }
+
+  /******************************************************************************** SHOW STOCK **************************** */
 
   const showStock = (quantity) => {
 
@@ -114,8 +142,10 @@ const Card = ({ product, showViewProductButton = true, showAddToCartButtonCondit
             {showStock(product.quantity)}
             <br />
             {showViewButton(showViewProductButton)}
+            {showRemoveButton(showRemoveProductButton)}
             {showAddToCartButton(showAddToCartButtonCondition)}
             {showCartUpdateOptions(cartUpdate)}
+
           </div>
 
         </div>

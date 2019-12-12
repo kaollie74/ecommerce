@@ -88,8 +88,42 @@ export const updateItem = (productId, count) => {
     localStorage.setItem("cart", JSON.stringify(cart)); 
   }
 
- 
-  
+} // END UPDATE ITEM 
 
+/************************************************************************ REMOVE ITEM */
+export const removeItem = (productId) => {
 
-}
+  console.log("IN REMOVE ITEM: ", productId);
+
+  // declare cart variable to empty Array; 
+  let cart = [];
+
+  if(typeof window !== "undefined") {
+    if(localStorage.getItem("cart")){
+      
+      cart = JSON.parse(localStorage.getItem("cart"))
+    }
+
+    // map through cart array.
+    // if the item._id matches the productId that is passed in
+    // as an agrument, then splice that item out of the array.
+    cart.map((item, i) => {
+      //console.log("item: ", item);
+      if(item._id === productId) {
+        //console.log("item id: ", item._id)
+        console.log(cart[i]);
+
+        //splice() method
+        // 1st argument is where the splice should start.
+        // 2nd argument is how many should be removed once it 
+        // begins. 
+        cart.splice(i , 1); 
+      }
+    })
+    // set local storage to the browser with new cart array. 
+    localStorage.setItem("cart", JSON.stringify(cart)); 
+  }
+
+  return cart;
+
+} // END REMOVE ITEM 
