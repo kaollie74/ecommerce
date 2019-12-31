@@ -14,19 +14,27 @@ const Checkout = ({ products }) => {
       return currentValue + nextValue.count * nextValue.price;
     }, 0)
   }
-  return (
-    <div>
-      <h1>Total: ${getTotal()} </h1>
 
-      {isAuth() ? (
+  const showCheckout = () => {
+    return (
+
+      isAuth() ? (
         <button className="btn btn-success">Checkout</button>
       ) : (
           <Link to="/signin">
             <button className="btn btn-primary">please sign in</button>
 
           </Link>
-        )}
+        )
+
+    )
+  }
+  return (
+    <div>
+      <h1>Total: ${getTotal()} </h1>
+      {showCheckout()}
     </div>
+
   )
 
 }
